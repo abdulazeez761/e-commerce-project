@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ECommerceWebsite.Context;
+﻿using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -54,14 +49,15 @@ namespace ECommerceWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,CategoryDescription,CategoryStatus,DateCreated")] Category category)
+        public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,CategoryDescription,DateCreated")] Category category)
         {
-            if (ModelState.IsValid)
+            try
             {
                 _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (Exception ex) { }
             return View(category);
         }
 

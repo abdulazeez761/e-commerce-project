@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ECommerceWebsite.Context;
+using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ECommerceWebsite.Context;
-using ECommerceWebsite.Models;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -57,13 +53,24 @@ namespace ECommerceWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductID,ProductName,ProductDescription,Price,Discount,ProductStatus,CategoryID,Stock,DateCreated")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
-            if (ModelState.IsValid)
+            Category category = await _context.Categories.FindAsync(product.CategoryID);
+            if (category == null)
+                throw new Exception("Category not found");
+
+            product.Category = category;
+            category.Products.Add(product);
+            try
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.Message);
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
             ViewData["CategoryID"] = new SelectList(_context.Categories, "CategoryID", "CategoryName", product.CategoryID);
             return View(product);

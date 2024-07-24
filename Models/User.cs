@@ -40,15 +40,16 @@ namespace ECommerceWebsite.Models
         [MaxLength(20), Phone]
         public string PhoneNumber { get; set; }
 
-        [Required]
-        public string UserType { get; set; }
 
-        [Required]
+        [EnumDataType(typeof(Roles))]
+
+        public Roles UserType { get; set; } = Roles.User;
+
         [EnumDataType(typeof(AccountStatus))]
         public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Order> Orders { get; set; }
-        public ICollection<Testimonial> Testimonials { get; set; }
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Testimonial> Testimonials { get; set; } = new List<Testimonial>();
     }
 }

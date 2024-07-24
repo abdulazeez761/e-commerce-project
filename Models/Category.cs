@@ -16,12 +16,11 @@ namespace ECommerceWebsite.Models
         [MaxLength(255)]
         public string CategoryDescription { get; set; }
 
-        [Required]
         [EnumDataType(typeof(CategoryStatus))]
         public CategoryStatus CategoryStatus { get; set; } = CategoryStatus.Active;
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        public ICollection<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
 
     }
 }

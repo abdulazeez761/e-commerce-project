@@ -22,7 +22,8 @@ namespace ECommerceWebsite.Models
         [Range(0, double.MaxValue)]
         public decimal Discount { get; set; } = 0;
 
-        [Required]
+        //add product images
+
         [EnumDataType(typeof(ProductStatus))]
         public ProductStatus ProductStatus { get; set; } = ProductStatus.Active;
         public int CategoryID { get; set; }
@@ -35,6 +36,6 @@ namespace ECommerceWebsite.Models
 
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        public ICollection<OrderItem> OrderItems { get; set; }
+        //public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>(); // we might need it to calculate how many times products is ordered
     }
 }

@@ -9,7 +9,6 @@ namespace ECommerceWebsite.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int OrderItemID { get; set; }
 
-
         public int OrderID { get; set; }
 
         [ForeignKey("OrderID")]

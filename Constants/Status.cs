@@ -12,12 +12,17 @@
         Active,
         Inactive,
     }
+    public enum Roles
+    {
+        Admin,
+        User,
+    }
 
     public enum ProductStatus
     {
         Active,
         OutOfStock,
-
+        Deleted
     }
 
     public enum CategoryStatus

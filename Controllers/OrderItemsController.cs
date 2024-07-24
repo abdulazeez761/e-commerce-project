@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ECommerceWebsite.Context;
+using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ECommerceWebsite.Context;
-using ECommerceWebsite.Models;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -61,12 +57,23 @@ namespace ECommerceWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderItemID,OrderID,ProductID,Quantity,UnitPrice,Discount")] OrderItem orderItem)
         {
-            if (ModelState.IsValid)
+            Order order = await _context.Orders.FindAsync(orderItem.OrderID);
+            order.OrderItems.Add(orderItem);
+            orderItem.Order = order;
+            orderItem.Product = await _context.Products.FindAsync(orderItem.ProductID);
+            try
             {
+
                 _context.Add(orderItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine(ex.Message);
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID", orderItem.OrderID);
             ViewData["ProductID"] = new SelectList(_context.Products, "ProductID", "ProductName", orderItem.ProductID);
             return View(orderItem);

@@ -4,6 +4,7 @@ using ECommerceWebsite.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWebsite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240724161357_crud-migration")]
+    partial class crudmigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -250,8 +253,9 @@ namespace ECommerceWebsite.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserID");
 
@@ -278,7 +282,7 @@ namespace ECommerceWebsite.Migrations
                         .IsRequired();
 
                     b.HasOne("ECommerceWebsite.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("OrderItems")
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -316,6 +320,11 @@ namespace ECommerceWebsite.Migrations
                 });
 
             modelBuilder.Entity("ECommerceWebsite.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("ECommerceWebsite.Models.Product", b =>
                 {
                     b.Navigation("OrderItems");
                 });
