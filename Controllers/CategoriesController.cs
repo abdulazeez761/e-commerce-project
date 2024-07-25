@@ -14,13 +14,11 @@ namespace ECommerceWebsite.Controllers
             _context = context;
         }
 
-        // GET: Categories
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categories.ToListAsync());
         }
 
-        // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,15 +36,11 @@ namespace ECommerceWebsite.Controllers
             return View(category);
         }
 
-        // GET: Categories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryID,CategoryName,CategoryDescription,DateCreated")] Category category)
@@ -61,7 +55,6 @@ namespace ECommerceWebsite.Controllers
             return View(category);
         }
 
-        // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,9 +70,6 @@ namespace ECommerceWebsite.Controllers
             return View(category);
         }
 
-        // POST: Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("CategoryID,CategoryName,CategoryDescription,CategoryStatus,DateCreated")] Category category)
@@ -112,7 +102,7 @@ namespace ECommerceWebsite.Controllers
             return View(category);
         }
 
-        // GET: Categories/Delete/5
+        //this might show a sweet alert
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,7 +120,33 @@ namespace ECommerceWebsite.Controllers
             return View(category);
         }
 
-        // POST: Categories/Delete/5
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+
+            if (!CategoryExists(id))
+                return NotFound();
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(m => m.CategoryID == id);
+            category.CategoryStatus = Constants.CategoryStatus.Inactive;
+
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task<IActionResult> ActiveCategory(int id)
+        {
+
+            if (!CategoryExists(id))
+                return NotFound();
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(m => m.CategoryID == id);
+            category.CategoryStatus = Constants.CategoryStatus.Active;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        //this code is to delete the category from the data base which we dont want to do we only want to soft dlete it whichc means to change teh status.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -144,6 +160,9 @@ namespace ECommerceWebsite.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
         private bool CategoryExists(int id)
         {

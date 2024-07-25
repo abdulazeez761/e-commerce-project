@@ -42,7 +42,6 @@ namespace ECommerceWebsite.Controllers
             return View(orderItem);
         }
 
-        // GET: OrderItems/Create
         public IActionResult Create()
         {
             ViewData["OrderID"] = new SelectList(_context.Orders, "OrderID", "OrderID");
@@ -50,9 +49,7 @@ namespace ECommerceWebsite.Controllers
             return View();
         }
 
-        // POST: OrderItems/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //this function will add an order item to the current order that is stored in the session
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderItemID,OrderID,ProductID,Quantity,UnitPrice,Discount")] OrderItem orderItem)
@@ -79,7 +76,6 @@ namespace ECommerceWebsite.Controllers
             return View(orderItem);
         }
 
-        // GET: OrderItems/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,9 +93,7 @@ namespace ECommerceWebsite.Controllers
             return View(orderItem);
         }
 
-        // POST: OrderItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderItemID,OrderID,ProductID,Quantity,UnitPrice,Discount")] OrderItem orderItem)
@@ -134,7 +128,7 @@ namespace ECommerceWebsite.Controllers
             return View(orderItem);
         }
 
-        // GET: OrderItems/Delete/5
+        //this will be for deleteing an order item from the current orderitem collection of the order that is sotred in the session
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -154,7 +148,6 @@ namespace ECommerceWebsite.Controllers
             return View(orderItem);
         }
 
-        // POST: OrderItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

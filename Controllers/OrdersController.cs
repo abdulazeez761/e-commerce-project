@@ -1,4 +1,5 @@
-﻿using ECommerceWebsite.Context;
+﻿using ECommerceWebsite.Constants;
+using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -51,9 +52,10 @@ namespace ECommerceWebsite.Controllers
             return View();
         }
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
+        //this function should be responsable of sotring the datat in the ssession then  once the userchechks out it calls afunction to save the data
+        //and we shoudl have anotherfunction for delteting the order from the session once he users cancales and so on
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderID,UserID,Address,OrderDate,TotalAmount,OrderStatus")] Order order)
@@ -76,7 +78,6 @@ namespace ECommerceWebsite.Controllers
             return View(order);
         }
 
-        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -93,9 +94,8 @@ namespace ECommerceWebsite.Controllers
             return View(order);
         }
 
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("OrderID,UserID,Address,OrderDate,TotalAmount,OrderStatus")] Order order)
@@ -128,8 +128,25 @@ namespace ECommerceWebsite.Controllers
             ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email", order.UserID);
             return View(order);
         }
+        public async Task SetOrderStatus(int id, OrderStatus orderStatus)
+        {
+            if (OrderExists(id))
+            {
+                var order = await _context.Orders.FindAsync(id);
+                if (order != null)
+                {
+                    order.OrderStatus = orderStatus;
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
 
-        // GET: Orders/Delete/5
+        //function on chechkout that accepts a list of OrderItems and accepts an order
+        public async Task CheckOut(Order order, ICollection<OrderItem> orderItems)
+        {
+
+        }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,7 +165,6 @@ namespace ECommerceWebsite.Controllers
             return View(order);
         }
 
-        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

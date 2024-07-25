@@ -60,7 +60,8 @@ namespace ECommerceWebsite.Controllers
         public async Task<IActionResult> Create(Product product, List<IFormFile> photos)
         {
             Category category = await _context.Categories.FindAsync(product.CategoryID);
-            if (category == null)
+
+            if (category == null || category.CategoryStatus == Constants.CategoryStatus.Inactive)
                 throw new Exception("Category not found");
 
             product.Category = category;
@@ -156,6 +157,8 @@ namespace ECommerceWebsite.Controllers
             return View(product);
         }
 
+
+
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -176,8 +179,43 @@ namespace ECommerceWebsite.Controllers
 
             return View(product);
         }
+        public async Task<IActionResult> SoftDelete(int id)
+        {
 
-        // POST: Products/Delete/5
+            if (!ProductExists(id))
+                return NotFound();
+
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            product.ProductStatus = Constants.ProductStatus.Deleted;
+
+            return RedirectToAction(nameof(Index));
+        }
+        public async Task SetProductToOutOfStuck(int id)
+        {
+
+            if (ProductExists(id))
+            {
+                var product = await _context.Products
+            .FirstOrDefaultAsync(m => m.ProductID == id);
+                product.ProductStatus = Constants.ProductStatus.OutOfStock;
+            }
+        }
+
+        public async Task<IActionResult> ActiveProduct(int id)
+        {
+
+            if (!ProductExists(id))
+                return NotFound();
+
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductID == id);
+            product.ProductStatus = Constants.ProductStatus.Active;
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        //this code is to delete the product from the data base which we dont want to do we only want to soft dlete it whichc means to change teh status.
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
