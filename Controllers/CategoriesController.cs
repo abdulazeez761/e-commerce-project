@@ -135,7 +135,7 @@ namespace ECommerceWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _context.Categories.Include(c => c.Products).FirstOrDefaultAsync(c => c.CategoryID == id);
             if (category != null)
             {
                 _context.Categories.Remove(category);

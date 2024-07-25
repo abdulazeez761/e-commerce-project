@@ -9,10 +9,13 @@ namespace ECommerceWebsite.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
 
         // GET: Products
@@ -32,6 +35,7 @@ namespace ECommerceWebsite.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductPhotos)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
             if (product == null)
             {
@@ -53,7 +57,7 @@ namespace ECommerceWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(Product product, List<IFormFile> photos)
         {
             Category category = await _context.Categories.FindAsync(product.CategoryID);
             if (category == null)
@@ -61,6 +65,29 @@ namespace ECommerceWebsite.Controllers
 
             product.Category = category;
             category.Products.Add(product);
+            //adding  productImages
+            var webRootPath = Path.Combine(_hostEnvironment.WebRootPath, "images/productsImages");
+            if (!Directory.Exists(webRootPath))
+            {
+                Directory.CreateDirectory(webRootPath);
+            }
+            foreach (var photo in photos)
+            {
+                Guid picName = Guid.NewGuid();
+                string fullPath = Path.Combine(webRootPath, picName + Path.GetExtension(photo.FileName));
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    photo.CopyTo(fileStream);
+                }
+                var productPhoto = new ProductPhoto
+                {
+                    ProductID = product.ProductID,
+                    FilePath = Path.GetFileName(fullPath)
+                };
+                _context.ProductPhotos.Add(productPhoto);
+
+                product.ProductPhotos.Add(productPhoto);
+            }
             try
             {
                 _context.Add(product);
@@ -139,7 +166,9 @@ namespace ECommerceWebsite.Controllers
 
             var product = await _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.ProductPhotos)
                 .FirstOrDefaultAsync(m => m.ProductID == id);
+
             if (product == null)
             {
                 return NotFound();
@@ -153,7 +182,10 @@ namespace ECommerceWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products
+           .Include(p => p.Category)
+           .Include(p => p.ProductPhotos)
+           .FirstOrDefaultAsync(m => m.ProductID == id);
             if (product != null)
             {
                 _context.Products.Remove(product);

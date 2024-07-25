@@ -153,7 +153,7 @@ namespace ECommerceWebsite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.Include(o => o.OrderItems).FirstOrDefaultAsync(m => m.OrderID == id);
             if (order != null)
             {
                 _context.Orders.Remove(order);

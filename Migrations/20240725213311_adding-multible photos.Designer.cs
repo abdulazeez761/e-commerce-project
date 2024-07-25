@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWebsite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240724115838_first migratin")]
-    partial class firstmigratin
+    [Migration("20240725213311_adding-multible photos")]
+    partial class addingmultiblephotos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -253,9 +253,12 @@ namespace ECommerceWebsite.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("UserType")
+                    b.Property<string>("UserPhoto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
 
                     b.HasKey("UserID");
 
@@ -282,7 +285,7 @@ namespace ECommerceWebsite.Migrations
                         .IsRequired();
 
                     b.HasOne("ECommerceWebsite.Models.Product", "Product")
-                        .WithMany("OrderItems")
+                        .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -320,11 +323,6 @@ namespace ECommerceWebsite.Migrations
                 });
 
             modelBuilder.Entity("ECommerceWebsite.Models.Order", b =>
-                {
-                    b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("ECommerceWebsite.Models.Product", b =>
                 {
                     b.Navigation("OrderItems");
                 });

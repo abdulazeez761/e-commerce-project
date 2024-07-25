@@ -13,6 +13,7 @@ namespace ECommerceWebsite.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
+        public DbSet<ProductPhoto> ProductPhotos { get; set; }
 
 
 
@@ -33,15 +34,15 @@ namespace ECommerceWebsite.Context
                 .WithOne(p => p.Category)
                 .HasForeignKey(p => p.CategoryID);
 
-            //modelBuilder.Entity<Product>()
-            //    .HasMany(p => p.OrderItems)
-            //    .WithOne(oi => oi.Product)
-            //    .HasForeignKey(oi => oi.ProductID);
-
             modelBuilder.Entity<Order>()
                 .HasMany(o => o.OrderItems)
                 .WithOne(oi => oi.Order)
                 .HasForeignKey(oi => oi.OrderID);
+
+            modelBuilder.Entity<ProductPhoto>()
+            .HasOne(p => p.Product)
+            .WithMany(p => p.ProductPhotos)
+            .HasForeignKey(p => p.ProductID);
         }
     }
 }

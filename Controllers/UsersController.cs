@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using ECommerceWebsite.Context;
+﻿using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ECommerceWebsite.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public UsersController(ApplicationDbContext context)
+        public UsersController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
+
         }
 
         // GET: Users
@@ -54,14 +52,27 @@ namespace ECommerceWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,UserName,Email,PasswordHash,FirstName,LastName,Address,City,Country,PostalCode,PhoneNumber,UserType,AccountStatus,DateCreated")] User user)
+        public async Task<IActionResult> Create([Bind("UserID,UserName,Email,PasswordHash,FirstName,LastName,Address,City,Country,PostalCode,PhoneNumber,UserType,AccountStatus,DateCreated")] User user, IFormFile UserPhoto)
         {
-            if (ModelState.IsValid)
+            var webRootPath = Path.Combine(_hostEnvironment.WebRootPath, "images/usrProfileImages");
+            if (!Directory.Exists(webRootPath))
+            {
+                Directory.CreateDirectory(webRootPath);
+            }
+            Guid picName = Guid.NewGuid();
+            string fullPath = Path.Combine(webRootPath, picName + Path.GetExtension(UserPhoto.FileName));
+            using (var fileStream = new FileStream(fullPath, FileMode.Create))
+            {
+                UserPhoto.CopyTo(fileStream);
+            }
+            user.UserPhoto = Path.GetFileName(fullPath);
+            try
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
+            catch (Exception ex) { }
+
             return View(user);
         }
 

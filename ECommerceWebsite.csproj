@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\usrProfileImages\" />
     <Folder Include="wwwroot\images\productsImages\" />
   </ItemGroup>
 

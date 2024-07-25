@@ -5,7 +5,7 @@
 namespace ECommerceWebsite.Migrations
 {
     /// <inheritdoc />
-    public partial class crudmigration : Migration
+    public partial class mulitbleimagesupload : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

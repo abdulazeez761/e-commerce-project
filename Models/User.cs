@@ -16,6 +16,8 @@ namespace ECommerceWebsite.Models
         [Required, MaxLength(100), EmailAddress]
         public string Email { get; set; }
 
+        public string UserPhoto { get; set; }
+
         [Required]
         public string PasswordHash { get; set; }
 

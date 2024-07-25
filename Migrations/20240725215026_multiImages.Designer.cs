@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWebsite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240724174509_user-migratin")]
-    partial class usermigratin
+    [Migration("20240725215026_multiImages")]
+    partial class multiImages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,6 +161,28 @@ namespace ECommerceWebsite.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("ECommerceWebsite.Models.ProductPhoto", b =>
+                {
+                    b.Property<int>("PhotoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhotoID"));
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PhotoID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("ProductPhotos");
+                });
+
             modelBuilder.Entity("ECommerceWebsite.Models.Testimonial", b =>
                 {
                     b.Property<int>("TestimonialID")
@@ -253,6 +275,10 @@ namespace ECommerceWebsite.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("UserPhoto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserType")
                         .HasColumnType("int");
 
@@ -302,6 +328,17 @@ namespace ECommerceWebsite.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ECommerceWebsite.Models.ProductPhoto", b =>
+                {
+                    b.HasOne("ECommerceWebsite.Models.Product", "Product")
+                        .WithMany("ProductPhotos")
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("ECommerceWebsite.Models.Testimonial", b =>
                 {
                     b.HasOne("ECommerceWebsite.Models.User", "User")
@@ -321,6 +358,11 @@ namespace ECommerceWebsite.Migrations
             modelBuilder.Entity("ECommerceWebsite.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
+                });
+
+            modelBuilder.Entity("ECommerceWebsite.Models.Product", b =>
+                {
+                    b.Navigation("ProductPhotos");
                 });
 
             modelBuilder.Entity("ECommerceWebsite.Models.User", b =>
