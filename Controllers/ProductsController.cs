@@ -66,12 +66,30 @@ namespace ECommerceWebsite.Controllers
 
             product.Category = category;
             category.Products.Add(product);
+
+
+
+
             //adding  productImages
+
             var webRootPath = Path.Combine(_hostEnvironment.WebRootPath, "images/productsImages");
             if (!Directory.Exists(webRootPath))
             {
                 Directory.CreateDirectory(webRootPath);
             }
+
+            //adding main product image
+            var mainProductImage = photos[0];
+            Guid mainImage = Guid.NewGuid();
+            string fullPathForMain = Path.Combine(webRootPath, mainImage + Path.GetExtension(mainProductImage.FileName));
+
+            using (var fileStream = new FileStream(fullPathForMain, FileMode.Create))
+            {
+                mainProductImage.CopyTo(fileStream);
+            }
+            product.ProductImage = Path.GetFileName(fullPathForMain);
+
+            //adding the rest of the product images
             foreach (var photo in photos)
             {
                 Guid picName = Guid.NewGuid();

@@ -21,6 +21,7 @@ namespace ECommerceWebsite.Models
 
         [Range(0, double.MaxValue)]
         public decimal Discount { get; set; } = 0;
+        public string ProductImage { get; set; }
 
         [EnumDataType(typeof(ProductStatus))]
         public ProductStatus ProductStatus { get; set; } = ProductStatus.Active;
