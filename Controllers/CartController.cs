@@ -3,6 +3,8 @@ using ECommerceWebsite.Context;
 using ECommerceWebsite.Extensions;
 using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
+using mvc_first_task.ActionFilters;
+using System.Security.Claims;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -86,35 +88,78 @@ namespace ECommerceWebsite.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout()
+        [RoleValidation(Constants.Roles.User)]
+        public async Task<IActionResult> Checkout(
+      string fullName,
+      string address,
+      string city,
+      string state,
+      string postalCode,
+      string country)
         {
-            /* logic:
-             *connecting the order items with order and connecting the order with the user
-             *calculating the total amount of the order including discounts
-             * add user payment credetionals
-             */
-            var cart = HttpContext.Session.GetObjectFromJson<List<OrderItem>>("Cart") ?? new List<OrderItem>();
-
-            if (!cart.Any())
+            try
             {
-                ModelState.AddModelError("", "Cart is empty. Please add items to the cart before checking out.");
-                return RedirectToAction(nameof(Index));
+                var cart = HttpContext.Session.GetObjectFromJson<List<OrderItem>>("Cart") ?? new List<OrderItem>();
+
+                if (!cart.Any())
+                {
+                    ModelState.AddModelError("", "Cart is empty. Please add items to the cart before checking out.");
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Create an Order and populate with billing information
+                var order = new Order
+                {
+                    UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
+                    OrderDate = DateTime.Now,
+                    TotalAmount = cart.Sum(item => item.Quantity * item.UnitPrice),
+                    OrderStatus = OrderStatus.Pending,
+
+                    FullName = fullName,
+                    Address = address,
+                    City = city,
+                    State = state,
+                    PostalCode = postalCode,
+                    Country = country
+                };
+                foreach (var item in cart)
+                {
+                    var orderItem = new OrderItem
+                    {
+                        ProductID = item.ProductID,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice
+
+                    };
+
+                    order.OrderItems.Add(orderItem);
+                }
+                var user = _context.Users.FirstOrDefault(x => x.UserID == order.UserID);
+                if (user != null)
+                {
+                    if (user.Orders == null)
+                        user.Orders = new List<Order>();
+
+                    user.Orders.Add(order);
+                }
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.Remove("Cart");
+                HttpContext.Session.SetString("CartCounter", "0");
+
+                return RedirectToAction("Index", "Home");
             }
-
-            var order = new Order
+            catch (Exception ex)
             {
-                UserID = 1, // Placeholder for authenticated user ID
-                OrderDate = DateTime.Now,
-                TotalAmount = cart.Sum(item => item.Quantity * item.UnitPrice),
-                OrderStatus = OrderStatus.Pending,
-                OrderItems = cart
-            };
 
-            _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
-
-            HttpContext.Session.Remove("Cart");
-            return RedirectToAction("Index", "Orders");
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                ModelState.AddModelError("", "An error occurred while processing your request. Please try again.");
+                return View("Index", "Home");
+            }
         }
+
+
     }
 }

@@ -27,6 +27,11 @@ namespace ECommerceWebsite.Models
 
         [EnumDataType(typeof(OrderStatus))]
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+        public string FullName { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
+        public string PostalCode { get; set; }
 
         public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }

@@ -59,6 +59,23 @@ namespace ECommerceWebsite.Controllers
                 user.Salt = Convert.ToBase64String(salt); // Store the salt
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+                var userRole = user.UserType.ToString();
+
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
+            new Claim(ClaimTypes.Role, userRole)
+        };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true // Set to true if you want the cookie to persist across browser sessions
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception)
