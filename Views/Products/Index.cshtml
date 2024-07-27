@@ -42,7 +42,10 @@
                             <p>Discount: @item.Discount</p>
                             <p>Status: @item.ProductStatus</p>
                             <div class="portfolio-links">
-                                <a asp-action="Details" asp-route-id="@item.ProductID" class="portfolio-lightbox"><i class="bx bx-plus"></i></a>
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.ProductID" />
+                                    <button style="background: none; outline:none; border:none;" type="submit" class="portfolio"> <a class="portfolio"><i class="bx bx-plus"></i></a></button>
+                                </form>
                                 <a asp-action="Details" asp-route-id="@item.ProductID"><i class="bx bx-link"></i></a>
                             </div>
                         </div>

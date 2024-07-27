@@ -42,11 +42,33 @@
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Testimonials" asp-action="Index">Testimonials</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li class="nav-item position-relative">
+                            <a  class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
+                                <i class="bx bx-cart" style="font-size: 1.55rem; margin-right:3px"></i>
+                                <span style="
+                                         background-color: #34b7a7;
+                                         color: #fff;
+                                         font-size: 0.75rem;
+                                         padding: 0.25em 0.6em;
+                                         border: 1px solid #fff;
+                                         box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1);
+                                         position: absolute;
+                                         top: 0;
+                                         right: 0;
+                                         transform: translate(50%, -50%);
+                                         border-radius: 50%; "
+                                        class="badge rounded-pill">
+                                    @(int.TryParse(Context.Session.GetString("CartCounter"), out int count) ? count : 0)
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -77,6 +99,7 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets1/js/main.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

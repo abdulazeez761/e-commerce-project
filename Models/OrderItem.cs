@@ -5,9 +5,9 @@ namespace ECommerceWebsite.Models
 {
     public class OrderItem
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderItemID { get; set; }
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid OrderItemID { get; set; } = Guid.NewGuid();
 
         public int OrderID { get; set; }
 
