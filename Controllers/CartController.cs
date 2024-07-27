@@ -36,7 +36,6 @@ namespace ECommerceWebsite.Controllers
 
             if (existingItem != null)
                 existingItem.Quantity++;
-
             else
             {
                 cart.Add(new OrderItem
@@ -92,7 +91,7 @@ namespace ECommerceWebsite.Controllers
             /* logic:
              *connecting the order items with order and connecting the order with the user
              *calculating the total amount of the order including discounts
-             *
+             * add user payment credetionals
              */
             var cart = HttpContext.Session.GetObjectFromJson<List<OrderItem>>("Cart") ?? new List<OrderItem>();
 

@@ -12,10 +12,10 @@
         Active,
         Inactive,
     }
-    public enum Roles
+    public static class Roles
     {
-        Admin,
-        User,
+        public const string User = "User";
+        public const string Admin = "Admin";
     }
 
     public enum ProductStatus

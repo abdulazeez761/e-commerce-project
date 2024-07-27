@@ -20,6 +20,7 @@ namespace ECommerceWebsite.Models
 
         [Required]
         public string PasswordHash { get; set; }
+        public string Salt { get; set; }
 
         [MaxLength(100)]
         public string FirstName { get; set; }
@@ -42,10 +43,7 @@ namespace ECommerceWebsite.Models
         [MaxLength(20), Phone]
         public string PhoneNumber { get; set; }
 
-
-        [EnumDataType(typeof(Roles))]
-
-        public Roles UserType { get; set; } = Roles.User;
+        public string UserType { get; set; } = Roles.User;
 
         [EnumDataType(typeof(AccountStatus))]
         public AccountStatus AccountStatus { get; set; } = AccountStatus.Active;
