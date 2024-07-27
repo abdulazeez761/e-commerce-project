@@ -18,14 +18,38 @@ namespace ECommerceWebsite.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        // GET: Products
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Products.Include(p => p.Category);
-            return View(await applicationDbContext.ToListAsync());
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductPhotos)
+                //.Take(3)
+                .ToListAsync();
+
+            var categories = await _context.Categories.ToListAsync();
+
+            var viewModel = new ProductIndexViewModel
+            {
+                Products = products,
+                Categories = categories
+            };
+
+            return View(viewModel);
+        }
+        public async Task<IActionResult> LoadMoreProducts(int skip, int take)
+        {
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.ProductPhotos)
+                .OrderBy(p => p.ProductID)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return PartialView("_ProductListPartial", products);
         }
 
-        // GET: Products/Details/5
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

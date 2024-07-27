@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ECommerceWebsite.Models.Product>
+﻿@model ProductIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,69 +9,129 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Discount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Discount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<section id="portfolio" class="portfolio">
+    <div class="container" data-aos="fade-up">
+        <div class="section-title">
+            <h2>Portfolio</h2>
+            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+        </div>
+
+        <div class="row" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-12 d-flex justify-content-center">
+                <ul id="portfolio-flters">
+                    <li data-filter="*" class="filter-active" onclick="filterByCategory('all')">All</li>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <li data-filter=".filter-@category.CategoryName" onclick="filterByCategory('@category.CategoryName')">@category.CategoryName</li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="row portfolio-container" data-aos="fade-up" data-aos-delay="200" id="productList">
+            @foreach (var item in Model.Products)
+            {
+                <div class="col-lg-4 col-md-6 portfolio-item filter-@item.Category.CategoryName" data-category="@item.Category.CategoryName">
+                    <div class="portfolio-wrap">
+                        <img src="@Url.Content("~/images/productsImages/" + item.ProductImage)" class="img-fluid main-product-image" alt="@item.ProductName">
+                        <div class="portfolio-info">
+                            <h4>@item.ProductName</h4>
+                            <p>@item.ProductDescription</p>
+                            <p>Price: @item.Price</p>
+                            <p>Discount: @item.Discount</p>
+                            <p>Status: @item.ProductStatus</p>
+                            <div class="portfolio-links">
+                                <a asp-action="Details" asp-route-id="@item.ProductID" class="portfolio-lightbox"><i class="bx bx-plus"></i></a>
+                                <a asp-action="Details" asp-route-id="@item.ProductID"><i class="bx bx-link"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="text-center mt-4">
+            <button style="background: #34b7a7; outline:none;" id="showMoreBtn" class="btn btn-primary">Show More</button>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript Initialization -->
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let productList = document.getElementById('productList');
+        let showMoreBtn = document.getElementById('showMoreBtn');
+        let items = Array.from(productList.querySelectorAll('.portfolio-item'));
+        let itemsToShow = 3; // Number of items to show initially and when "Show More" is clicked
+        let displayedItems = 0;
+        let iso;
+        let currentFilter = '*';
+
+        function initializeIsotope() {
+            const portfolioContainer = document.querySelector('.portfolio-container');
+            if (portfolioContainer) {
+                iso = new Isotope(portfolioContainer, {
+                    itemSelector: '.portfolio-item',
+                    layoutMode: 'fitRows'
+                });
+                // Apply current filter
+                iso.arrange({ filter: currentFilter });
+            }
+        }
+
+        function updateDisplay() {
+            // Apply current filter
+            iso.arrange({ filter: currentFilter });
+
+            // Display only the number of items we want to show
+            items.forEach((item, index) => {
+                if (index < displayedItems) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Reinitialize Isotope after updating display
+            if (iso) {
+                iso.arrange();
+            }
+
+            // If all items are shown, hide the button
+            if (displayedItems >= items.length) {
+                showMoreBtn.style.display = 'none';
+            }
+        }
+
+        showMoreBtn.addEventListener('click', function () {
+            displayedItems += itemsToShow;
+            updateDisplay();
+        });
+
+        // Initial display setup
+        displayedItems = itemsToShow;
+        initializeIsotope();
+        updateDisplay();
+    });
+
+    // Filter products by category
+    function filterByCategory(category) {
+        currentFilter = category === 'all' ? '*' : `.filter-${category}`;
+
+        // Apply the filter immediately
+        if (iso) {
+            iso.arrange({ filter: currentFilter });
+        }
+
+        document.querySelectorAll('#portfolio-flters li').forEach(button => {
+            button.classList.remove('filter-active');
+        });
+
+        document.querySelector(`[onclick="filterByCategory('${category}')"]`).classList.add('filter-active');
+
+        // Reset displayed items count and update display
+        document.dispatchEvent(new Event('DOMContentLoaded')); // Triggers display update with current filter
+    }
+</script>

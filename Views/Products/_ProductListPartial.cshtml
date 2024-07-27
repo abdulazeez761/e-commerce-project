@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ECommerceWebsite.Models.Product>
+
+
+@foreach (var item in Model)
+{
+    <div class="col-lg-4 col-md-6 portfolio-item filter-@item.Category.CategoryName" data-category="@item.Category.CategoryName">
+        <div class="portfolio-wrap">
+            <img src="@Url.Content("~/images/productsImages/" + item.ProductImage)" class="img-fluid main-product-image" alt="">
+            <div class="portfolio-info">
+                <h4>@item.ProductName</h4>
+                <p>@item.ProductDescription</p>
+                <p>Price: @item.Price</p>
+                <p>Discount: @item.Discount</p>
+                <p>Status: @item.ProductStatus</p>
+                <div class="portfolio-links">
+                    <a asp-action="Details" asp-route-id="@item.ProductID" class="portfolio-lightbox"><i class="bx bx-plus"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.ProductID"><i class="bx bx-link"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
