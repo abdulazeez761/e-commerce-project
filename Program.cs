@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.AccessDeniedPath = "/Account/NotAuth";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Short-lived session
         options.SlidingExpiration = true;
         options.Cookie.HttpOnly = true;
