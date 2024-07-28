@@ -45,7 +45,6 @@ namespace ECommerceWebsite.Controllers
             return View();
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserID,UserName,Email,PasswordHash,FirstName,LastName,Address,City,Country,PostalCode,PhoneNumber,UserType,AccountStatus,DateCreated")] User user, IFormFile UserPhoto)
@@ -71,7 +70,6 @@ namespace ECommerceWebsite.Controllers
 
             return View(user);
         }
-
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,22 +117,6 @@ namespace ECommerceWebsite.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
-        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -143,7 +125,23 @@ namespace ECommerceWebsite.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+
+                user.AccountStatus = Constants.AccountStatus.Inactive;
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Active(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user != null)
+            {
+
+                user.AccountStatus = Constants.AccountStatus.Active;
             }
 
             await _context.SaveChangesAsync();

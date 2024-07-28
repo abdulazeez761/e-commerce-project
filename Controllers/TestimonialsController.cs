@@ -3,6 +3,8 @@ using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using mvc_first_task.ActionFilters;
+using System.Security.Claims;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -47,17 +49,18 @@ namespace ECommerceWebsite.Controllers
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [RoleValidation(Constants.Roles.User)]
         public async Task<IActionResult> Create([Bind("TestimonialID,UserID,Content,Status,DateCreated")] Testimonial testimonial)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(testimonial);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserID"] = new SelectList(_context.Users, "UserID", "Email", testimonial.UserID);
-            return View(testimonial);
+            testimonial.UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var user = _context.Users.FirstOrDefault(u => u.UserID == testimonial.UserID);
+
+            testimonial.User = user;
+            user.Testimonials.Add(testimonial);
+            _context.Add(testimonial);
+
+            await _context.SaveChangesAsync();
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public async Task<IActionResult> Edit(int? id)

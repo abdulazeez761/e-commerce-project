@@ -101,8 +101,14 @@ namespace ECommerceWebsite.Controllers
             }
 
             var user = _context.Users.FirstOrDefault(u => u.Email == email);
+
             if (user != null && VerifyPassword(user.PasswordHash, password, Convert.FromBase64String(user.Salt)))
             {
+                if (user.AccountStatus == Constants.AccountStatus.Inactive)
+                {
+                    ModelState.AddModelError(string.Empty, "no such an account !");
+                    return View();
+                }
                 var userRole = user.UserType.ToString();
 
                 var claims = new List<Claim>

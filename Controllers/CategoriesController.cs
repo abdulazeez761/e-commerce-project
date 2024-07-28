@@ -27,8 +27,8 @@ namespace ECommerceWebsite.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.CategoryID == id);
+            var category = await _context.Categories.Include(c => c.Products)
+        .FirstOrDefaultAsync(m => m.CategoryID == id);
             if (category == null)
             {
                 return NotFound();
@@ -131,6 +131,7 @@ namespace ECommerceWebsite.Controllers
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             category.CategoryStatus = Constants.CategoryStatus.Inactive;
 
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
         public async Task<IActionResult> ActiveCategory(int id)
@@ -142,7 +143,7 @@ namespace ECommerceWebsite.Controllers
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             category.CategoryStatus = Constants.CategoryStatus.Active;
-
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

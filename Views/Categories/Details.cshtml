@@ -1,42 +1,225 @@
 ﻿@model ECommerceWebsite.Models.Category
 
 @{
+    Layout = "_AdminLayout";
     ViewData["Title"] = "Details";
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Active" => "bg-success",
+            "Deleted" => "bg-danger",
+            "OutOfStock" => "bg-warning",
+            _ => "bg-primary"
+        };
+    }
 }
 
 <h1>Details</h1>
 
 <div>
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Message"]
+        </div>
+    }
     <h4>Category</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CategoryName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryDescription)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CategoryDescription)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryStatus)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.CategoryStatus)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DateCreated)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DateCreated)
         </dd>
     </dl>
 </div>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.CategoryID">Edit</a> |
+    <h4>Products in this Category</h4>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Products.First().ProductName)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().ProductDescription)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().Price)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().Discount)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().ProductImage)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().ProductStatus)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().Category.CategoryName)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().Stock)</th>
+                <th>@Html.DisplayNameFor(model => model.Products.First().DateCreated)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ProductDescription)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Discount)</td>
+                    <td>
+                        <img src="~/images/productsImages/@item.ProductImage" alt="@item.ProductName" style="width:50px; height:50px;" />
+                    </td>
+                    <td>
+                        <span class="badge @GetStatusClass(item.ProductStatus.ToString())">
+                            @Html.DisplayFor(modelItem => item.ProductStatus)
+                        </span>
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Stock)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                    <td>
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item text-warning" asp-controller="AdminProducts" asp-action="Edit" asp-route-id="@item.ProductID">
+                                    <i class="bx bx-edit-alt me-1"></i> Edit
+                                </a>
+                                <a class="dropdown-item text-info" asp-controller="AdminProducts" asp-action="Details" asp-route-id="@item.ProductID">
+                                    <i class="bx bx-show-alt me-1"></i> Details
+                                </a>
+                                <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal" data-productid="@item.ProductID">
+                                    <i class="bx bx-trash me-1"></i> Delete
+                                </a>
+                                <form asp-controller="AdminProducts" asp-action="ActiveProduct" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.ProductID" />
+                                    <button type="submit" class="dropdown-item text-success">
+                                        <i class="bx bx-check me-1"></i> Active
+                                    </button>
+                                </form>
+                                <form asp-controller="AdminProducts" asp-action="SetProductToOutOfStuck" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.ProductID" />
+                                    <button type="submit" class="dropdown-item text-warning">
+                                        <i class="bx bx-check me-1"></i> Set Out of Stock
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form asp-controller="AdminProducts" id="deleteForm" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var productId = button.getAttribute('data-productid');
+            var form = document.getElementById('deleteForm');
+            form.setAttribute('action', '@Url.Action("SoftDelete", "AdminProducts")/' + productId);
+        });
+    });
+</script>
+
+<style>
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+        border-collapse: separate;
+        border-spacing: 0 15px;
+    }
+
+        .table th, .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-top: none;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: none;
+        }
+
+    .table-hover tbody tr:hover {
+        color: #212529;
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+
+    .fw-bold {
+        font-weight: bold;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.35em 0.65em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.375rem;
+    }
+
+    .bg-primary {
+        background-color: #007bff !important;
+        color: #fff;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+        color: #fff;
+    }
+
+    .bg-danger {
+        background-color: #dc3545 !important;
+        color: #fff;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+        color: #212529;
+    }
+</style>
