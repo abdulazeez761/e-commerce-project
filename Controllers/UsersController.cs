@@ -101,19 +101,19 @@ namespace ECommerceWebsite.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    var claims = User.Claims.ToList();
-                    var claim = claims.FirstOrDefault(x => x.Type == "Name");
-                    if (claim != null)
+                    var existingUser = await _context.Users.FindAsync(user.UserID);
+                    if (existingUser == null)
                     {
-                        claims.Remove(claim);
-                        claims.Add(new Claim("Name", user.UserName));
-
-                        var appIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                        var updatedUserClaim = new ClaimsPrincipal(appIdentity);
-
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, updatedUserClaim);
+                        return NotFound();
                     }
+
+                    existingUser.PhoneNumber = user.PhoneNumber;
+                    existingUser.FirstName = user.FirstName;
+                    existingUser.LastName = user.LastName;
+                    existingUser.Email = user.Email;
+                    existingUser.UserName = user.UserName;
+                    if (user.UserPhoto != null) existingUser.UserPhoto = user.UserPhoto;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
