@@ -1,5 +1,7 @@
+using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace ECommerceWebsite.Controllers
@@ -7,13 +9,15 @@ namespace ECommerceWebsite.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Constants.Roles.Admin))
             {
@@ -22,7 +26,17 @@ namespace ECommerceWebsite.Controllers
             }
             else
             {
-                return View();
+                // If the condition is not met, fetch the testimonials
+                var testemonials = await _context.Testimonials
+                                                 .Where(t => t.Status == Constants.TestimonialStatus.Approved)
+                                                 .Include(t => t.User)
+                                                 .ToListAsync();
+                if (testemonials == null || !testemonials.Any())
+                {
+                    return View(new List<Testimonial>());
+                }
+
+                return View(testemonials);
             }
         }
 

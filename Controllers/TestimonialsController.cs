@@ -93,8 +93,12 @@ namespace ECommerceWebsite.Controllers
 
         [HttpPost]
         [RoleValidation(Constants.Roles.User)]
-        public async Task<IActionResult> Create([Bind("TestimonialID,UserID,Content,Status,DateCreated")] Testimonial testimonial)
+        public async Task<IActionResult> Create([Bind("TestimonialID,UserID,Content,Status,DateCreated")] string message)
         {
+            Testimonial testimonial = new Testimonial()
+            {
+                Content = message
+            };
             testimonial.UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             var user = _context.Users.FirstOrDefault(u => u.UserID == testimonial.UserID);
 
