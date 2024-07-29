@@ -13,11 +13,13 @@ namespace ECommerceWebsite.Controllers
             return View();
         }
         public IActionResult AdminTestomonilePage()
+
         {
             return View();
         }
         public IActionResult AdminOrdersPage()
         {
+
             return View();
         }
         public IActionResult AdminProductsAddPage()

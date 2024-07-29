@@ -1,15 +1,18 @@
 ﻿@model IEnumerable<ECommerceWebsite.Models.Testimonial>
-
 @{
-    ViewData["Title"] = "Index";
+    Layout = "_AdminLayout";
+ 
 }
 
-<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<div class="card">
+    <h5 class="card-header">Table Basic</h5>
+    <div class="table-responsive text-nowrap">
+     <table class="table">
+
     <thead>
         <tr>
             <th>
@@ -24,10 +27,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateCreated)
             </th>
-            <th></th>
+            <th>Action</th>
         </tr>
     </thead>
-    <tbody>
+            <tbody class="table-border-bottom-0">
 @foreach (var item in Model) {
         <tr>
             <td>
