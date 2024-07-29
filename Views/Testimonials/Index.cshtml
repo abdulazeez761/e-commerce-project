@@ -6,8 +6,12 @@
 
 }
 
-<h1>Index</h1>
-
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -45,9 +49,16 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.TestimonialID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TestimonialID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TestimonialID">Delete</a>
+                    <div class="container-fluid" style="display:flex; justify-content:space-around">
+                        <form asp-action="Accept" asp-route-id="@item.TestimonialID" method="post">
+                            <button type="submit" class="btn btn-outline-success" style="">Accept</button>
+                        </form>
+
+                        <form asp-action="RejectTestimonial" asp-route-id="@item.TestimonialID" method="post">
+                            <button type="submit" class="btn btn-outline-danger" style="display:inline">Reject</button>
+                        </form>
+                    </div>
+
             </td>
         </tr>
 }

@@ -24,27 +24,68 @@
     <link href="~/assets1/css/style.css" rel="stylesheet">
 
 </head>
+@{
+    @using System.Security.Claims
+    @using ECommerceWebsite.Models.ViewModals
+
+
+    var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var userImage = User.FindFirst(CustomClaimTypes.UserImage)?.Value;
+    var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+
+}
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ECommerceWebsite</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+               
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a></li>
                         <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="OrderItems" asp-action="Index">Order Items</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Testimonials" asp-action="Index">Testimonials</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                                <div class="avatar">
+                                    <img src="~/images/usrProfileImages/@userImage" alt="User Photo" class="w-40 h-auto rounded-circle" />
+                                </div>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-online me-3">
+                                                    <img src="~/images/usrProfileImages/@userImage" alt="User Avatar" class="w-40 h-auto rounded-circle" />
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <span class="fw-semibold d-block">@userName</span>                                                    
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+                                  
+                                    <li>
+                                        <a asp-area="" asp-controller="Users" asp-action="EditUser" asp-route-id="@userID" class="dropdown-item">
+                                            <i class="bx bx-cog me-2"></i>
+                                            <span class="align-middle">Settings</span>
+                                        </a>
+                                    </li>
+                                  
+                                    <li>
+                                        <div class="dropdown-divider"></div>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Account" asp-action="Logout">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">Log Out</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                         }
                         else
                         {
@@ -71,6 +112,7 @@
                                 </span>
                             </a>
                         </li>
+                       
                     </ul>
                 </div>
             </div>
@@ -114,7 +156,35 @@
             </div>
         </div>
     </footer>
+    <style>
+        .avatar {
+            position: relative;
+            width: 2.375rem;
+            height: 2.375rem;
+            cursor: pointer;
+        }
 
+            .avatar img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .avatar .avatar-initial {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #fff;
+                background-color: #8592a3;
+                font-weight: 700;
+            }
+
+    </style>
 
     <!-- Vendor JS Files -->
     <script src="~/assets1/vendor/purecounter/purecounter_vanilla.js"></script>

@@ -15,7 +15,15 @@ namespace ECommerceWebsite.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity.IsAuthenticated && User.IsInRole(Constants.Roles.Admin))
+            {
+
+                return RedirectToAction("Index", "Users");
+            }
+            else
+            {
+                return View();
+            }
         }
 
         public IActionResult Privacy()

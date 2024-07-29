@@ -1,7 +1,10 @@
 ﻿using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace ECommerceWebsite.Controllers
 {
@@ -99,6 +102,18 @@ namespace ECommerceWebsite.Controllers
                 try
                 {
                     _context.Update(user);
+                    var claims = User.Claims.ToList();
+                    var claim = claims.FirstOrDefault(x => x.Type == "Name");
+                    if (claim != null)
+                    {
+                        claims.Remove(claim);
+                        claims.Add(new Claim("Name", user.UserName));
+
+                        var appIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var updatedUserClaim = new ClaimsPrincipal(appIdentity);
+
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, updatedUserClaim);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -117,6 +132,76 @@ namespace ECommerceWebsite.Controllers
             return View(user);
         }
 
+        public async Task<IActionResult> EditUser(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(int id, [Bind("UserID,UserName,Email,PasswordHash,FirstName,LastName,Address,City,Country,PostalCode,PhoneNumber,UserType,AccountStatus,DateCreated")] User user)
+        {
+            if (id != user.UserID)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var existingUser = await _context.Users.FindAsync(user.UserID);
+                if (existingUser == null)
+                {
+                    return NotFound();
+                }
+
+                existingUser.PhoneNumber = user.PhoneNumber;
+                existingUser.FirstName = user.FirstName;
+                existingUser.LastName = user.LastName;
+                existingUser.Email = user.Email;
+                existingUser.UserName = user.UserName;
+                if (user.UserPhoto != null) existingUser.UserPhoto = user.UserPhoto;
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    var nameClaim = claimsIdentity.FindFirst(ClaimTypes.Name);
+                    if (nameClaim != null)
+                    {
+                        claimsIdentity.RemoveClaim(nameClaim);
+                        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+                    }
+
+                    var updatedUserClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, updatedUserClaimsPrincipal);
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(user.UserID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction("Index", "Home");
+        }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -147,6 +232,7 @@ namespace ECommerceWebsite.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool UserExists(int id)
         {

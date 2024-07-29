@@ -4,36 +4,96 @@
     ViewData["Title"] = "Login";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white text-center">
-                    <h4>Login</h4>
-                </div>
-                <div class="card-body">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-                    <form asp-action="Login" method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        <div class="form-group mb-3">
-                            <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label asp-for="PasswordHash"  class="form-label">Password</label>
-                            <input asp-for="PasswordHash" name="password" type="password" class="form-control" />
-                            <span asp-validation-for="PasswordHash" class="text-danger"></span>
-                        </div>
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </div>
-                    </form>
+    <title>Login Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet" />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
+                                 
+    <!-- Core CSS -->            
+    <link rel="stylesheet" href="~/assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="~/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="~/assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+    <!-- Page CSS -->
+    <!-- Page -->
+    <link rel="stylesheet" href="~/assets/vendor/css/pages/page-auth.css" />
+    <!-- Helpers -->
+    <script src="~/assets/vendor/js/helpers.js"></script>
+
+   
+    <script src="~/assets/js/config.js"></script>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4>Login</h4>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="Login" method="post">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group mb-3">
+                                <label asp-for="Email" class="form-label">Email or Username</label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label asp-for="PasswordHash" class="form-label">Password</label>
+                                <input asp-for="PasswordHash" name="password" type="password" class="form-control" />
+                                <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- Include your JavaScript files -->
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <!-- Include additional scripts as needed -->
+</body>
+</html>
+<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="~/assets/vendor/libs/popper/popper.js"></script>
+<script src="~/assets/vendor/js/bootstrap.js"></script>
+<script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+
+<script src="../assets/vendor/js/menu.js"></script>
+<!-- endbuild -->
+<!-- Vendors JS -->
+<!-- Main JS -->
+<script src="~/assets/js/main.js"></script>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <!-- Include additional script references if necessary -->
 }

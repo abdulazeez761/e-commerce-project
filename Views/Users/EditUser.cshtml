@@ -1,0 +1,127 @@
+﻿@model ECommerceWebsite.Models.User
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Edit User";
+}
+
+
+
+<link rel="stylesheet" href="~/assets/vendor/fonts/boxicons.css" />
+
+<link rel="stylesheet" href="~/assets/vendor/css/core.css" class="template-customizer-core-css" />
+<link rel="stylesheet" href="~/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+<link rel="stylesheet" href="~/assets/css/demo.css" />
+
+<link rel="stylesheet" href="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+
+
+<script src="~/assets/vendor/js/helpers.js"></script>
+
+
+<script src="~/assets/js/config.js"></script>
+
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+        <div class="layout-page">
+
+         
+            <div class="content-wrapper">
+                <div class="container-xxl flex-grow-1 container-p-y">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <h5 class="card-header">Edit User</h5>
+                                <div class="card-body">
+                                    <form asp-action="EditUser" asp-controller="Users" method="post">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <input type="hidden" asp-for="UserID" />
+                                        <div class="row">
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="UserName" class="control-label"></label>
+                                                <input asp-for="UserName" class="form-control" />
+                                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="Email" class="control-label"></label>
+                                                <input asp-for="Email" class="form-control" />
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="PasswordHash" class="control-label"></label>
+                                                <input asp-for="PasswordHash" class="form-control" />
+                                                <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="FirstName" class="control-label"></label>
+                                                <input asp-for="FirstName" class="form-control" />
+                                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="LastName" class="control-label"></label>
+                                                <input asp-for="LastName" class="form-control" />
+                                                <span asp-validation-for="LastName" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="Address" class="control-label"></label>
+                                                <input asp-for="Address" class="form-control" />
+                                                <span asp-validation-for="Address" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="City" class="control-label"></label>
+                                                <input asp-for="City" class="form-control" />
+                                                <span asp-validation-for="City" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="Country" class="control-label"></label>
+                                                <input asp-for="Country" class="form-control" />
+                                                <span asp-validation-for="Country" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="PostalCode" class="control-label"></label>
+                                                <input asp-for="PostalCode" class="form-control" />
+                                                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="PhoneNumber" class="control-label"></label>
+                                                <input asp-for="PhoneNumber" class="form-control" />
+                                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="UserType" class="control-label"></label>
+                                                <input asp-for="UserType" class="form-control" />
+                                                <span asp-validation-for="UserType" class="text-danger"></span>
+                                            </div>
+                                            <div class="mb-3 col-md-6">
+                                                <label asp-for="AccountStatus" class="control-label"></label>
+                                                <select asp-for="AccountStatus" class="form-control">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Inactive">Inactive</option>
+                                                </select>
+                                                <span asp-validation-for="AccountStatus" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-3">
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                            <a href ='javascript:history.go(-1)' class="btn btn-secondary">Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- / Layout wrapper -->
+<!-- Core JS -->
+<script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="~/assets/vendor/libs/popper/popper.js"></script>
+<script src="~/assets/vendor/js/bootstrap.js"></script>
+<script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="~/assets/vendor/js/menu.js"></script>
+<!-- Main JS -->
+<script src="~/assets/js/main.js"></script>

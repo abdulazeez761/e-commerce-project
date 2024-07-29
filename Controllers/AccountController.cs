@@ -1,5 +1,6 @@
 ﻿using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
+using ECommerceWebsite.Models.ViewModals;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,7 @@ namespace ECommerceWebsite.Controllers
             try
             {
                 user.Salt = Convert.ToBase64String(salt); // Store the salt
+                //user.UserType = Constants.Roles.Admin;//adding a user as admin
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 var userRole = user.UserType.ToString();
@@ -66,7 +68,9 @@ namespace ECommerceWebsite.Controllers
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
-            new Claim(ClaimTypes.Role, userRole)
+            new Claim(ClaimTypes.Role, userRole),
+               new Claim(CustomClaimTypes.UserImage, user.UserPhoto),
+
         };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -76,7 +80,8 @@ namespace ECommerceWebsite.Controllers
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                return RedirectToAction("Index", "Home");
+                if (user.UserType == Constants.Roles.Admin) return RedirectToAction("Index", "Users");
+                else return RedirectToAction("Index", "Home");
             }
             catch (Exception)
             {
@@ -116,7 +121,8 @@ namespace ECommerceWebsite.Controllers
             new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
-            new Claim(ClaimTypes.Role, userRole)
+            new Claim(ClaimTypes.Role, userRole),
+               new Claim(CustomClaimTypes.UserImage, user.UserPhoto),
         };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -126,7 +132,8 @@ namespace ECommerceWebsite.Controllers
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                return RedirectToAction("Index", "Home");
+                if (user.UserType == Constants.Roles.Admin) return RedirectToAction("Index", "Users");
+                else return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -137,7 +144,7 @@ namespace ECommerceWebsite.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult NotAuth()

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerceWebsite.Migrations
 {
     /// <inheritdoc />
-    public partial class slat : Migration
+    public partial class dashsboardanduser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -45,7 +45,7 @@ namespace ECommerceWebsite.Migrations
                     Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    UserType = table.Column<int>(type: "int", nullable: false),
+                    UserType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccountStatus = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -91,7 +91,12 @@ namespace ECommerceWebsite.Migrations
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    OrderStatus = table.Column<int>(type: "int", nullable: false)
+                    OrderStatus = table.Column<int>(type: "int", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

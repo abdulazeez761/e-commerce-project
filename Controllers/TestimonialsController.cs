@@ -23,6 +23,7 @@ namespace ECommerceWebsite.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [HttpPost]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,6 +40,48 @@ namespace ECommerceWebsite.Controllers
             }
 
             return View(testimonial);
+        }
+        [RoleValidation(Constants.Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> Accept(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var testimonial = await _context.Testimonials
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(m => m.TestimonialID == id);
+            if (testimonial == null)
+            {
+                return NotFound();
+            }
+            testimonial.Status = Constants.TestimonialStatus.Approved;
+            await _context.SaveChangesAsync();
+            TempData["Message"] = "testemonial has been approved";
+            return Redirect(Request.Headers["Referer"].ToString());
+        }
+        [RoleValidation(Constants.Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> RejectTestimonial(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var testimonial = await _context.Testimonials
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(m => m.TestimonialID == id);
+            if (testimonial == null)
+            {
+                return NotFound();
+            }
+            testimonial.Status = Constants.TestimonialStatus.Rejected;
+            await _context.SaveChangesAsync();
+            TempData["Message"] = "testemonial has been rejected";
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         public IActionResult Create()
