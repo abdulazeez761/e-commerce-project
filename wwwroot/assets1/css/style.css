@@ -124,7 +124,7 @@ h6 {
 }
 
 #header .logo {
-  font-size: 32px;
+  font-size: 80px;
   margin: 0;
   padding: 0;
   line-height: 1;
@@ -231,12 +231,12 @@ h6 {
   width: 25px;
 }
 
-.navbar a:hover,
-.navbar .active,
-.navbar .active:focus,
-.navbar li:hover>a {
-  color: #222222;
-}
+    .navbar a:hover,
+    .navbar .active,
+    .navbar .active:focus,
+    .navbar li:hover > a {
+        color: #696cff;
+    }
 
 .navbar .dropdown ul {
   display: block;
@@ -419,10 +419,10 @@ h6 {
 # Hero Section
 --------------------------------------------------------------*/
 #hero {
-  width: 100%;
-  height: 100vh;
-  background: url("../img/hero-bg.jpg") top right;
-  background-size: cover;
+    width: 100%;
+    height: 100vh;
+    background: url("../img/pexels-vlada-karpovich-6755753.jpg") top right; 
+    background-size: cover;
 }
 
 #hero .container {
@@ -451,18 +451,18 @@ h6 {
 }
 
 #hero .btn-about {
-  font-family: "Raleway", sans-serif;
-  text-transform: uppercase;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 1px;
-  display: inline-block;
-  padding: 12px 40px;
-  border-radius: 50px;
-  transition: 0.5s;
-  margin-top: 30px;
-  color: #fff;
-  background: #34b7a7;
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding: 12px 40px;
+    border-radius: 50px;
+    transition: 0.5s;
+    margin-top: 30px;
+    color: #fff;
+    background: #696cff;
 }
 
 #hero .btn-about:hover {
@@ -522,16 +522,16 @@ section {
   position: relative;
 }
 
-.section-title h2::after {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 50px;
-  height: 3px;
-  background: #34b7a7;
-  bottom: 0;
-  left: calc(50% - 25px);
-}
+    .section-title h2::after {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 3px;
+        background: #696cff;
+        bottom: 0;
+        left: calc(50% - 25px);
+    }
 
 .section-title p {
   margin-bottom: 0;
@@ -970,11 +970,11 @@ section {
   border-radius: 50px;
 }
 
-.portfolio #portfolio-flters li:hover,
-.portfolio #portfolio-flters li.filter-active {
-  color: #fff;
-  background: #34b7a7;
-}
+    .portfolio #portfolio-flters li:hover,
+    .portfolio #portfolio-flters li.filter-active {
+        color: #fff;
+        background: #696cff;
+    }
 
 .portfolio #portfolio-flters li:last-child {
   margin-right: 0;
@@ -1138,19 +1138,19 @@ section {
   background: #fff;
 }
 
-.contact .info i {
-  font-size: 20px;
-  color: #34b7a7;
-  float: left;
-  width: 44px;
-  height: 44px;
-  background: #effbf9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px;
-  transition: all 0.3s ease-in-out;
-}
+    .contact .info i {
+        font-size: 20px;
+        color: aliceblue;
+        float: left;
+        width: 44px;
+        height: 44px;
+        background: #696cff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+    }
 
 .contact .info h4 {
   padding: 0 0 0 60px;
@@ -1175,7 +1175,7 @@ section {
 .contact .info .email:hover i,
 .contact .info .address:hover i,
 .contact .info .phone:hover i {
-  background: #34b7a7;
+  background:#7b7eff
   color: #fff;
 }
 
