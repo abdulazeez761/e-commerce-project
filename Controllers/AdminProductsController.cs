@@ -3,9 +3,12 @@ using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using mvc_first_task.ActionFilters;
 
 namespace ECommerceWebsite.Controllers
 {
+    [RoleValidation(Constants.Roles.Admin)]
+
     public class AdminProductsController : Controller
     {
         private readonly ApplicationDbContext _context;

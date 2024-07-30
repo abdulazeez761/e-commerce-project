@@ -421,7 +421,7 @@ h6 {
 #hero {
     width: 100%;
     height: 100vh;
-    background: url("../img/pexels-vlada-karpovich-6755753.jpg") top right; 
+    background: url("../img/pexels-vlada-karpovich-6755753.jpg") top right;
     background-size: cover;
 }
 
@@ -972,8 +972,8 @@ section {
 
     .portfolio #portfolio-flters li:hover,
     .portfolio #portfolio-flters li.filter-active {
-        color: #fff;
-        background: #696cff;
+        color: red;
+        background: #696cff !important;
     }
 
 .portfolio #portfolio-flters li:last-child {
