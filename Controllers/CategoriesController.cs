@@ -2,9 +2,13 @@
 using ECommerceWebsite.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using mvc_first_task.ActionFilters;
 
 namespace ECommerceWebsite.Controllers
 {
+
+    [RoleValidation(Constants.Roles.Admin)]
+
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

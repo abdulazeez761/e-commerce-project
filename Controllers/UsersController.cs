@@ -1,5 +1,6 @@
 ﻿using ECommerceWebsite.Context;
 using ECommerceWebsite.Models;
+using ECommerceWebsite.Models.ViewModals;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
@@ -231,6 +232,83 @@ namespace ECommerceWebsite.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        //should add a logic to delete the prev image
+        public async Task<IActionResult> EditImage(IFormFile UserPhoto)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var user = await _context.Users.FindAsync(userId);
+
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "User not found.");
+                return Redirect(Request.Headers["Referer"].ToString());
+            }
+
+            if (UserPhoto != null && UserPhoto.Length > 0)
+            {
+                var webRootPath = Path.Combine(_hostEnvironment.WebRootPath, "images/usrProfileImages");
+
+                if (!Directory.Exists(webRootPath))
+                {
+                    Directory.CreateDirectory(webRootPath);
+                }
+
+                var picName = Guid.NewGuid().ToString();
+                var fileExtension = Path.GetExtension(UserPhoto.FileName);
+                var fullPath = Path.Combine(webRootPath, picName + fileExtension);
+
+                using (var fileStream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await UserPhoto.CopyToAsync(fileStream);
+                }
+
+
+                if (!string.IsNullOrEmpty(user.UserPhoto))
+                {
+                    var oldFilePath = Path.Combine(webRootPath, user.UserPhoto);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                user.UserPhoto = Path.GetFileName(fullPath);
+
+                try
+                {
+                    // Update user claims with the new image path
+                    var claimsIdentity = User.Identity as ClaimsIdentity;
+                    if (claimsIdentity != null)
+                    {
+                        var imageClaim = claimsIdentity.FindFirst(CustomClaimTypes.UserImage);
+                        if (imageClaim != null)
+                        {
+                            claimsIdentity.RemoveClaim(imageClaim);
+                            claimsIdentity.AddClaim(new Claim(CustomClaimTypes.UserImage, user.UserPhoto));
+                        }
+
+                        var updatedUserClaimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, updatedUserClaimsPrincipal);
+                    }
+
+                    // Save changes to the database
+                    await _context.SaveChangesAsync();
+
+                    // Redirect back to the previous page
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception and show an error message
+                    ModelState.AddModelError(string.Empty, "An error occurred while saving the user. Please try again.");
+                    return Redirect(Request.Headers["Referer"].ToString());
+                }
+            }
+
+            // Redirect if no photo was uploaded
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
 
