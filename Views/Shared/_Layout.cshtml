@@ -23,42 +23,154 @@
     <!-- Template Main CSS File -->
     <link href="~/assets1/css/style.css" rel="stylesheet">
 
+    <style>
+        .navbar {
+            background-color: #fafbfc;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background-color 0.3s, border-bottom 0.3s;
+            list-style:none;
+        }
+
+       /*  .navbar-brand {
+            color: #34b7a7 !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        } */
+
+        .navbar-nav .nav-link {
+            color: #34b7a7 !important;
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+            .navbar-nav .nav-link:hover {
+                background-color: #34b7a7;
+                color: #ffffff !important;
+                border-radius: 0.25rem;
+            }
+
+        .navbar-nav .dropdown-menu {
+            background-color: #ffffff;
+            border: none;
+            outline: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .navbar-nav .dropdown-menu .dropdown-item {
+                color: #34b7a7 !important;
+                font-size: 0.9rem;
+            }
+
+                .navbar-nav .dropdown-menu .dropdown-item:hover {
+                    background-color: #34b7a7;
+                    color: #ffffff !important;
+                }
+
+        .avatar {
+            position: relative;
+            width: 2.375rem;
+            height: 2.375rem;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            margin-right: 0.5rem; /* Adjust this value to move the avatar to the left */
+        }
+
+            .avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .avatar:hover {
+                transform: scale(1.1);
+            }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            margin-right: 9rem; /* Adjust this value as needed to move the elements to the left */
+        }
+
+
+        .cart-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-right: 1rem; /* Adjust spacing if needed */
+            font-size: 20px; /* Set the icon size */
+            color: #34b7a7; /* Icon color */
+            transition: color 0.3s, background-color 0.3s; /* Smooth color transitions */
+
+        }
+
+
+
+        main {
+            padding-top: 5rem; /* To prevent content from being hidden behind the fixed navbar */
+        }
+    </style>
+
 </head>
 @{
     @using System.Security.Claims
     @using ECommerceWebsite.Models.ViewModals
 
-
     var userID = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var userImage = User.FindFirst(CustomClaimTypes.UserImage)?.Value;
     var userName = User.FindFirst(ClaimTypes.Name)?.Value;
-
 }
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ECommerceWebsite</a>
-               
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
+                    </ul>
+                    <div class="navbar-right">
+                        <li class="nav-item position-relative cart-icon">
+                            <a class="nav-link" asp-controller="Cart" asp-action="Index">
+                                <i class="bx bx-cart cart-icon" style="font-size:25px"></i>
+                                <span style="
+                                         background-color: #34b7a7;
+                                         color: #fff;
+                                         font-size: 0.75rem;
+                                         padding: 0.25em 0.6em;
+                                         border: 1px solid #fff;
+                                         box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1);
+                                         position: absolute;
+                                         top: -8px;
+                                         right: 4px;
+                                         transform: translate(50%, -50%);
+                                         border-radius: 50%; "
+                                      class="badge rounded-pill">
+                                    @(int.TryParse(Context.Session.GetString("CartCounter"), out int count) ? count : 0)
+                                </span>
+                            </a>
+                        </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <div class="avatar">
-                                    <img src="~/images/usrProfileImages/@userImage" alt="User Photo" class="w-40 h-auto rounded-circle" />
+                                    <img src="~/images/usrProfileImages/@userImage" alt="User Photo" class="rounded-circle" />
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar avatar-online me-3">
-                                                    <img src="~/images/usrProfileImages/@userImage" alt="User Avatar" class="w-40 h-auto rounded-circle" />
+                                                    <img src="~/images/usrProfileImages/@userImage" alt="User Avatar" class="rounded-circle" />
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">@userName</span>                                                    
+                                                    <span class="fw-semibold d-block">@userName</span>
                                                 </div>
                                             </div>
                                         </a>
@@ -66,14 +178,12 @@
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
-                                  
                                     <li>
                                         <a asp-area="" asp-controller="Users" asp-action="EditUser" asp-route-id="@userID" class="dropdown-item">
                                             <i class="bx bx-cog me-2"></i>
                                             <span class="align-middle">Settings</span>
                                         </a>
                                     </li>
-                                  
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
@@ -85,41 +195,17 @@
                                     </li>
                                 </ul>
                             </li>
-
                         }
                         else
                         {
                             <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
                         }
-                        <li class="nav-item position-relative">
-                            <a  class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
-                                <i class="bx bx-cart" style="font-size: 1.55rem; margin-right:3px"></i>
-                                <span style="
-                                         background-color: #34b7a7;
-                                         color: #fff;
-                                         font-size: 0.75rem;
-                                         padding: 0.25em 0.6em;
-                                         border: 1px solid #fff;
-                                         box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.1);
-                                         position: absolute;
-                                         top: 0;
-                                         right: 0;
-                                         transform: translate(50%, -50%);
-                                         border-radius: 50%; "
-                                        class="badge rounded-pill">
-                                    @(int.TryParse(Context.Session.GetString("CartCounter"), out int count) ? count : 0)
-                                </span>
-                            </a>
-                        </li>
-                       
-                    </ul>
+                    </div>
                 </div>
             </div>
         </nav>
-
     </header>
-
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -139,52 +225,11 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                   @*  @model ECommerceWebsite.Models.Testimonial *@
-
                     <h5>Submit a Testimonial</h5>
-                  @*   <form asp-controller="Testimonials" asp-action="Create" method="post" class="testimonial-form">
-                        <div class="form-group">
-                         
-                            <textarea asp-for="Content" class="form-control" rows="3" placeholder="Write your testimonial here"></textarea>
-                            <span asp-validation-for="Content" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" value="Submit" class="btn btn-primary" />
-                        </div>
-                    </form> *@
                 </div>
             </div>
         </div>
     </footer>
-    <style>
-        .avatar {
-            position: relative;
-            width: 2.375rem;
-            height: 2.375rem;
-            cursor: pointer;
-        }
-
-            .avatar img {
-                width: 100%;
-                height: 100%;
-            }
-
-            .avatar .avatar-initial {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                text-transform: uppercase;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #fff;
-                background-color: #8592a3;
-                font-weight: 700;
-            }
-
-    </style>
 
     <!-- Vendor JS Files -->
     <script src="~/assets1/vendor/purecounter/purecounter_vanilla.js"></script>
@@ -198,7 +243,6 @@
 
     <!-- Template Main JS File -->
     <script src="~/assets1/js/main.js"></script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

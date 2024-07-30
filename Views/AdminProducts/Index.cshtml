@@ -20,11 +20,10 @@
         @TempData["Message"]
     </div>
 }
- 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+
+<p style="margin-top:20px">
+    <a asp-action="Create" class="btn btn-primary">Create Proudcts</a>
 </p>
 <table class="table table-hover">
     <thead>
@@ -81,7 +80,7 @@
                 <td>
                     <span class="badge @GetStatusClass(item.ProductStatus.ToString())">
                         @Html.DisplayFor(modelItem => item.ProductStatus)
-                    </span>               
+                    </span>
                  </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.CategoryName)
