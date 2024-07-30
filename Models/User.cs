@@ -16,6 +16,7 @@ namespace ECommerceWebsite.Models
         [Required, MaxLength(100), EmailAddress]
         public string Email { get; set; }
 
+
         public string UserPhoto { get; set; }
 
         [Required]
@@ -23,24 +24,37 @@ namespace ECommerceWebsite.Models
         public string Salt { get; set; }
 
         [MaxLength(100)]
+        [Required]
         public string FirstName { get; set; }
 
         [MaxLength(100)]
+        [Required]
+
         public string LastName { get; set; }
 
         [MaxLength(255)]
+        [Required]
+
         public string Address { get; set; }
 
         [MaxLength(100)]
+        [Required]
+
         public string City { get; set; }
 
         [MaxLength(100)]
+        [Required]
+
         public string Country { get; set; }
 
         [MaxLength(20)]
+        [Required]
+
         public string PostalCode { get; set; }
 
         [MaxLength(20), Phone]
+        [Required]
+
         public string PhoneNumber { get; set; }
 
         public string UserType { get; set; } = Roles.User;

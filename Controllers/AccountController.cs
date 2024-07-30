@@ -136,7 +136,7 @@ namespace ECommerceWebsite.Controllers
                 else return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(string.Empty, "Wrong credentials.");
             return View();
         }
 

@@ -14,25 +14,35 @@
     <thead>
         <tr>
             <th>
+                <strong style="color:black;">
                 @Html.DisplayNameFor(model => model.CategoryName)
+                </strong>
             </th>
             <th>
+                <strong style="color:black;">
                 @Html.DisplayNameFor(model => model.CategoryDescription)
+                </strong>
             </th>
             <th>
+                <strong style="color:black;">
                 @Html.DisplayNameFor(model => model.CategoryStatus)
+                </strong>
             </th>
             <th>
+                 <strong style="color:black;">
                 @Html.DisplayNameFor(model => model.DateCreated)
+                </strong>
             </th>
-            <th>Actions</th>
+            <th> <strong style="color:black;"> Acctions </strong></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
+                    <strong style="color:black;">
                 @Html.DisplayFor(modelItem => item.CategoryName)
+                </strong>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CategoryDescription)
@@ -50,7 +60,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
-                
+
             <td>
                     <div class="dropdown">
                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -73,7 +83,7 @@
                             </button>
                         </form>
                     </div>
-            
+
                 </div>
             </td>
         </tr>
