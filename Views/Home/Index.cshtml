@@ -21,6 +21,7 @@
         border: none;
     }
 
+
         .custom-button:hover {
             background: #696cff; /* Adjust the hover background color as needed */
         }
@@ -48,7 +49,7 @@
         <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
             <div class="swiper-wrapper">
 
-                 @foreach (var item in Model) 
+                 @foreach (var item in Model)
                 {
                     <div class="swiper-slide">
                         <div class="testimonial-item">
@@ -107,7 +108,7 @@
             <div class="col-lg-8 mt-5 mt-lg-0">
 
                 <form asp-action="Create" asp-controller="Testimonials" >
-                 
+
 
                     <div class="form-group mt-3">
                         <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>

@@ -30,6 +30,11 @@
         Active,
         Inactive
     }
+    public enum CodeStatus
+    {
+        Active,
+        Inactive
+    }
 
     public enum OrderStatus
     {

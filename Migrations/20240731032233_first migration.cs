@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ECommerceWebsite.Migrations
 {
     /// <inheritdoc />
-    public partial class dashsboardanduser : Migration
+    public partial class firstmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -132,6 +132,30 @@ namespace ECommerceWebsite.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Code",
+                columns: table => new
+                {
+                    CodeID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CodeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ProductID = table.Column<int>(type: "int", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Code", x => x.CodeID);
+                    table.ForeignKey(
+                        name: "FK_Code_Products_ProductID",
+                        column: x => x.ProductID,
+                        principalTable: "Products",
+                        principalColumn: "ProductID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductPhotos",
                 columns: table => new
                 {
@@ -180,6 +204,11 @@ namespace ECommerceWebsite.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Code_ProductID",
+                table: "Code",
+                column: "ProductID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderID",
                 table: "OrderItems",
                 column: "OrderID");
@@ -213,6 +242,9 @@ namespace ECommerceWebsite.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Code");
+
             migrationBuilder.DropTable(
                 name: "OrderItems");
 

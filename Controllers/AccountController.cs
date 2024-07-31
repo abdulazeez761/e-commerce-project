@@ -58,7 +58,7 @@ namespace ECommerceWebsite.Controllers
             try
             {
                 user.Salt = Convert.ToBase64String(salt); // Store the salt
-                                                        //user.UserType = Constants.Roles.Admin;//adding a user as admin
+                //user.UserType = Constants.Roles.Admin;//adding a user as admin
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 var userRole = user.UserType.ToString();
@@ -132,7 +132,7 @@ namespace ECommerceWebsite.Controllers
                 };
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                if (user.UserType == Constants.Roles.Admin) return RedirectToAction("Index", "Users");
+                if (user.UserType == Constants.Roles.Admin) return RedirectToAction("Index", "DashBoarde");
                 else return RedirectToAction("Index", "Home");
             }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerceWebsite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240730074454_initialMigration")]
-    partial class initialMigration
+    [Migration("20240731034548_dsa")]
+    partial class dsa
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,38 @@ namespace ECommerceWebsite.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("ECommerceWebsite.Models.Code", b =>
+                {
+                    b.Property<int>("CodeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CodeID"));
+
+                    b.Property<string>("CodeName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IsActive")
+                        .HasColumnType("int");
+
+                    b.HasKey("CodeID");
+
+                    b.ToTable("Code");
                 });
 
             modelBuilder.Entity("ECommerceWebsite.Models.Order", b =>

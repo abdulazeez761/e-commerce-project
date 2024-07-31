@@ -108,11 +108,17 @@ namespace ECommerceWebsite.Controllers
                 }
 
                 // Create an Order and populate with billing information
+                var discountedChart = HttpContext.Session.GetString("NewTotalAmount");
+
+                decimal totalAmount = 0;
+                if (discountedChart is not null) totalAmount = decimal.Parse(discountedChart);
+                else totalAmount = cart.Sum(item => item.Quantity * item.UnitPrice);
+
                 var order = new Order
                 {
                     UserID = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)),
                     OrderDate = DateTime.Now,
-                    TotalAmount = cart.Sum(item => item.Quantity * item.UnitPrice),
+                    TotalAmount = totalAmount,
                     OrderStatus = OrderStatus.Pending,
 
                     FullName = fullName,
@@ -147,6 +153,7 @@ namespace ECommerceWebsite.Controllers
                 await _context.SaveChangesAsync();
 
                 HttpContext.Session.Remove("Cart");
+                HttpContext.Session.Remove("NewTotalAmount");
                 HttpContext.Session.SetString("CartCounter", "0");
 
                 return RedirectToAction("Index", "Home");
@@ -161,5 +168,41 @@ namespace ECommerceWebsite.Controllers
         }
 
 
+        [HttpPost]
+        public IActionResult ApplyDiscount(string discountCode)
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<List<OrderItem>>("Cart") ?? new List<OrderItem>();
+
+            if (string.IsNullOrEmpty(discountCode))
+            {
+                TempData["ErrorMessage"] = "Discount code is required.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var lowerDiscountCode = discountCode.ToLower();
+            var discount = _context.Code
+                .Where(d => d.CodeName.ToLower() == lowerDiscountCode && d.IsActive == Constants.CodeStatus.Active && d.ExpireDate >= DateTime.Now)
+                .FirstOrDefault();
+
+            if (discount == null)
+            {
+                TempData["ErrorMessage"] = "Invalid or expired discount code.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            decimal totalAmount = cart.Sum(item => item.Quantity * item.UnitPrice);
+
+            decimal discountAmount = discount.DiscountAmount;
+            decimal newTotalAmount = totalAmount - discountAmount;
+            var discountedChart = HttpContext.Session.GetString("NewTotalAmount");
+            if (discountedChart is not null)
+            {
+                TempData["ErrorMessage"] = "You already have applied this code";
+                return RedirectToAction(nameof(Index));
+            }
+            HttpContext.Session.SetString("NewTotalAmount", newTotalAmount.ToString());
+            TempData["SuccessMessage"] = "Discount code applied successfully!";
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

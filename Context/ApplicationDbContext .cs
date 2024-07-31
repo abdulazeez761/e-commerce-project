@@ -14,7 +14,7 @@ namespace ECommerceWebsite.Context
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }
         public DbSet<ProductPhoto> ProductPhotos { get; set; }
-
+        public DbSet<Code> Code { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,5 +44,6 @@ namespace ECommerceWebsite.Context
             .WithMany(p => p.ProductPhotos)
             .HasForeignKey(p => p.ProductID);
         }
+
     }
 }

@@ -6,6 +6,21 @@
 
 <h1>@ViewData["Title"]</h1>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+
 @if (Model != null && Model.Any())
 {
     <div class="container">
@@ -45,7 +60,6 @@
                         }
                     </tbody>
                 </table>
-
             </div>
 
             <!-- Summary Section -->
@@ -66,13 +80,41 @@
                     </div>
                     <div class="row">
                         <div class="col"><strong>Total:</strong></div>
-                        <div class="col text-end"><strong> @Model.Sum(item => (item.Quantity * item.UnitPrice) ).ToString("C")</strong></div>
+                        <div class="col text-end"><strong> 
+                            @if (Context.Session.GetString("NewTotalAmount") is not null)
+                                {
+                                    @Context.Session.GetString("NewTotalAmount")
+                                            }
+                                else
+                                {
+                                    @Model.Sum(item => (item.Quantity * item.UnitPrice)).ToString("C")
+                                }
+
+
+                            </strong>
+                     </div>
                     </div>
                 </div>
+
+                <!-- Discount Code Input -->
+                <div class="mb-3">
+                    <h4>Discount Code</h4>
+                    <form asp-action="ApplyDiscount" method="post" class="d-inline">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" id="discountCode" name="DiscountCode" placeholder="Enter discount code" />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success" style="background-color:#696cff">Apply</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Payment Section -->
-                <div >
+                <div>
                     <h3>Payment Information</h3>
-                    <p>wont be stored in database because it is not recommended unless i was the payment provider</p>
+                    <p>Won't be stored in database because it is not recommended unless I was the payment provider</p>
                     <form asp-action="Checkout" method="post">
                         <h3>Billing Information</h3>
                         <div class="mb-3">
@@ -103,11 +145,8 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Proceed to Payment</button>
                     </form>
-
                 </div>
             </div>
-
-
         </div>
     </div>
 }

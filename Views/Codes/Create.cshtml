@@ -1,0 +1,51 @@
+﻿@model ECommerceWebsite.Models.Code
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "_AdminLayout";
+
+}
+
+<h1>Create</h1>
+
+<h4>Code</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CodeName" class="control-label"></label>
+                <input asp-for="CodeName" class="form-control" />
+                <span asp-validation-for="CodeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DiscountAmount" class="control-label"></label>
+                <input asp-for="DiscountAmount" class="form-control" />
+                <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExpireDate" class="control-label"></label>
+                <input asp-for="ExpireDate" class="form-control" />
+                <span asp-validation-for="ExpireDate" class="text-danger"></span>
+            </div>
+        
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

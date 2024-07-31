@@ -22,7 +22,7 @@ namespace ECommerceWebsite.Controllers
             if (User.Identity.IsAuthenticated && User.IsInRole(Constants.Roles.Admin))
             {
 
-                return RedirectToAction("Index", "Users");
+                return RedirectToAction("Index", "DashBoarde");
             }
             else
             {
@@ -40,7 +40,14 @@ namespace ECommerceWebsite.Controllers
             }
         }
 
-
+        public IActionResult GetInTouch()
+        {
+            return View();
+        }
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

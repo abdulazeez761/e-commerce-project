@@ -100,6 +100,11 @@
                     <ul class="menu-inner py-1" id="menu">
                         <!-- Layouts -->
                         <li class="menu-item">
+                            <a asp-area="" asp-controller="DashBoarde" asp-action="Index" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-layout"></i>
+                                <div data-i18n="Layouts">DashBoards</div>
+                            </a>
+                        </li>   <li class="menu-item">
                             <a asp-area="" asp-controller="Users" asp-action="Index" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-layout"></i>
                                 <div data-i18n="Layouts">User</div>
@@ -129,7 +134,18 @@
                                 <div data-i18n="Misc">Orders</div>
                             </a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                        <li class="menu-item">
+                            <a asp-area="" asp-controller="Codes" asp-action="Index" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-purchase-tag"></i>
+                                <div data-i18n="Misc">Discount Code</div>
+                            </a>
+                        </li>
+                        <li class="menu-item">
+                            <a asp-area="" asp-controller="Account" asp-action="Logout" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-log-out"></i>
+                                <div data-i18n="Misc">Logout</div>
+                            </a>
+                        </li>
 
                     </ul>
 
