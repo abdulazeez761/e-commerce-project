@@ -58,7 +58,7 @@ namespace ECommerceWebsite.Controllers
             try
             {
                 user.Salt = Convert.ToBase64String(salt); // Store the salt
-                //user.UserType = Constants.Roles.Admin;//adding a user as admin
+                user.UserType = Constants.Roles.Admin;//adding a user as admin
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 var userRole = user.UserType.ToString();
